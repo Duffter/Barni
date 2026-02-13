@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARRRNNNNIIII 💖</title>
+    <style>
+        :root { --p: #ff69b4; --d: #ff1493; --s: #ffb6c1; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background: #000; height: 100vh; overflow: hidden; font-family: 'Arial Rounded MT Bold', sans-serif; color: white; display: flex; justify-content: center; align-items: center; transition: background 1s ease; }
+        
+        #aura { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,105,180,0.3) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none; z-index: -1; transform: translate(-50%, -50%); transition: width 0.5s, height 0.5s; }
+        #cursor { width: 15px; height: 15px; background: #fff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; box-shadow: 0 0 15px #fff; }
+        
+        .screen { display: none; opacity: 0; transition: 0.8s; width: 100%; height: 100%; position: absolute; flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
+        .active { display: flex !important; opacity: 1 !important; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        #terminal { font-family: 'Courier New', monospace; color: #0f0; text-align: left; line-height: 1.6; font-size: 14px; }
+        .cmd-btn { margin-top: 25px; padding: 12px 30px; background: transparent; color: #0f0; border: 2px solid #0f0; font-weight: bold; transition: 0.3s; }
+        
+        .v-box { width: 80%; max-width: 380px; height: 75vh; border: 6px solid white; border-radius: 30px; overflow: hidden; background: #000; box-shadow: 0 0 50px rgba(255,105,180,0.4); position: relative; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .btn-wrap { position: relative; width: 100%; height: 400px; display: flex; justify-content: center; align-items: center; }
+        .main-btn { padding: 20px 50px; border-radius: 50px; border: none; font-size: 1.5rem; font-weight: bold; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; }
+        #yesBtn { background: white; color: var(--d); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #noBtn { background: #ff4d4d; color: white; position: absolute; transition: 0.1s linear; }
+        
+        .polaroid { width: 180px; height: 220px; background: white; padding: 10px 10px 35px 10px; position: absolute; box-shadow: 0 15px 35px rgba(0,0,0,0.4); transition: 0.5s; z-index: 500; perspective: 1000px; }
+        .polaroid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; pointer-events: none; }
+        
+        .word { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 5rem; font-weight: bold; color: var(--s); text-shadow: 0 0 40px var(--d); text-align: center; width: 100%; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop src="romantic.mp3"></audio>
+<audio id="clickSfx" src="pop.mp3"></audio>
+
+<div id="aura"></div>
+<div id="cursor"></div>
+
+<div id="s1" class="screen active">
+    <div class="glass-card">
+        <div id="terminal"></div>
+        <button id="entryBtn" class="cmd-btn" style="display:none;" onclick="startEverything()">[ OPEN_HEART_LINK ]</button>
+    </div>
+</div>
+
+<div id="s2" class="screen"><div id="word-stage" style="width:100%; height:100%; position:relative;"></div></div>
+
+<div id="s3" class="screen">
+    <div class="v-box">
+        <video id="v" playsinline><source src="edit.mp4" type="video/mp4"></video>
+    </div>
+</div>
+
+<div id="s4" class="screen">
+    <h1 style="font-size: 2.8rem; margin-bottom: 50px; text-align: center;">Aarna, Will you be my Valentine? 💖</h1>
+    <div class="btn-wrap">
+        <button id="yesBtn" class="main-btn" onclick="celebrate()">YES! 💘</button>
+        <button id="noBtn" class="main-btn">No 😡</button>
+    </div>
+</div>
+
+<div id="s5" class="screen">
+    <h1 style="font-size: 4.5rem; z-index: 2000; text-shadow: 0 0 25px var(--d); animation: pulse 1s infinite;">GOOD CHOICE BARNI</h1>
+    <p style="font-size:1.4rem; z-index:2000; background: rgba(0,0,0,0.7); padding:12px 20px; border-radius:50px; margin-top:20px;">YOU lowk one in life getting me (I'm Batman)</p>
+</div>
+
+<script>
+    const v = document.getElementById('v');
+    const aura = document.getElementById('aura');
+    const cursor = document.getElementById('cursor');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    const clickSfx = document.getElementById('clickSfx');
+    let yesScale = 1;
+
+    // Tracker
+    function handleMove(x, y) {
+        cursor.style.left = x + 'px';
+        cursor.style.top = y + 'px';
+        aura.style.left = x + 'px';
+        aura.style.top = y + 'px';
+        
+        const rect = noBtn.getBoundingClientRect();
+        const dist = Math.hypot(x - (rect.left + rect.width/2), y - (rect.top + rect.height/2));
+        if(dist < 150) { moveNo(); }
+    }
+
+    document.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
+    document.addEventListener('touchmove', e => handleMove(e.touches[0].clientX, e.touches[0].clientY));
+
+    function moveNo() {
+        const x = Math.random() * (window.innerWidth - 200) + 100;
+        const y = Math.random() * (window.innerHeight - 200) + 100;
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+        yesScale += 0.15;
+        yesBtn.style.transform = `scale(${yesScale})`;
+        clickSfx.currentTime = 0;
+        clickSfx.play().catch(()=>{});
+    }
+
+    noBtn.onclick = moveNo;
+
+    // Terminal logic
+    const lines = ["> Accessing memories...", "> Target: AARNI BARNI...", "> Beauty level: Error (Out of range)", ">  Vrrr's protocol initiated...", "> Prepared to execute."];
+    let l = 0;
+    function type() {
+        if(l < lines.length) {
+            document.getElementById('terminal').innerHTML += lines[l] + "<br>";
+            l++; setTimeout(type, 500);
+        } else { document.getElementById('entryBtn').style.display = "block"; }
+    }
+    window.onload = type;
+
+    function startEverything() {
+    // This attempts to request fullscreen when she clicks the first button
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+
+    bgMusic.play().catch(()=>{});
+    runSequence();
+}
+
+    function runSequence() {
+        aura.style.width = "800px"; aura.style.height = "800px";
+        document.body.style.background = "#1a000a";
+        show('s2');
+        const words = ["MY", "FAVORITE", "PERSON", "AARNI", "BARNI"];
+        const stage = document.getElementById('word-stage');
+        let wIdx = 0;
+        const timer = setInterval(() => {
+            if(wIdx < words.length) {
+                const el = document.createElement('div'); el.className = 'word'; el.innerText = words[wIdx]; stage.appendChild(el);
+                el.animate([{transform: 'translate(-50%,-50%) scale(0)', opacity: 0}, {transform: 'translate(-50%,-50%) scale(1.6)', opacity: 1, offset: 0.5}, {transform: 'translate(-50%,-50%) scale(3.5)', opacity: 0}], {duration: 1300});
+                setTimeout(() => el.remove(), 1300); wIdx++;
+            } else {
+                clearInterval(timer);
+                setTimeout(() => { show('s3'); v.play(); }, 1000);
+            }
+        }, 1400);
+    }
+
+    v.onended = () => { 
+        document.body.style.background = "linear-gradient(var(--s), var(--p))"; 
+        aura.style.background = "radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0) 70%)";
+        show('s4'); 
+    };
+
+    function celebrate() {
+        show('s5');
+        for(let i=0; i<30; i++) { createHeart(true); }
+        setInterval(() => createHeart(false), 150);
+        
+        for(let i=1; i<=9; i++) {
+            setTimeout(() => {
+                const p = document.createElement('div'); p.className = 'polaroid';
+                const col = (i-1)%3, row = Math.floor((i-1)/3);
+                p.style.left = (15 + col*25) + (Math.random()*5) + 'vw';
+                p.style.top = (15 + row*25) + (Math.random()*5) + 'vh';
+                const baseRot = Math.random()*40-20;
+                p.style.transform = `rotate(${baseRot}deg) scale(0)`;
+                p.innerHTML = `<img src="${i}.jpg" onerror="this.src='https://picsum.photos/400/500?random=${i}'">`;
+                
+                // Tilt Effect
+                p.onmousemove = (e) => {
+                    const rect = p.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    p.style.transform = `perspective(1000px) rotateX(${y*-20}deg) rotateY(${x*20}deg) scale(1.2)`;
+                    p.style.zIndex = "1500";
+                };
+                p.onmouseleave = () => {
+                    p.style.transform = `rotate(${baseRot}deg) scale(1)`;
+                    p.style.zIndex = "500";
+                };
+
+                document.body.appendChild(p);
+                p.animate([{transform: `rotate(${baseRot}deg) scale(0)`}, {transform: `rotate(${baseRot}deg) scale(1)`}], {duration: 700, fill: 'forwards'});
+            }, i * 200);
+        }
+    }
+
+    function createHeart(isExplosion) {
+        const h = document.createElement('div');
+        h.innerHTML = ['❤️','💖','🌸','✨','💘','💩'][Math.floor(Math.random()*5)];
+        h.style.position = 'fixed'; h.style.zIndex = "100";
+        if(isExplosion) {
+            h.style.left = '50vw'; h.style.top = '50vh';
+            const angle = Math.random()*Math.PI*2, dist = Math.random()*500+100, tx = Math.cos(angle)*dist, ty = Math.sin(angle)*dist;
+            h.animate([{transform: 'translate(0,0) scale(1)', opacity: 1}, {transform: `translate(${tx}px,${ty}px) scale(0)`, opacity: 0}], {duration: 2000, easing: 'ease-out'});
+        } else {
+            h.style.left = Math.random()*100+'vw'; h.style.top = '-50px';
+            h.style.fontSize = (Math.random()*2+1.5)+'rem';
+            h.animate([{transform: 'translateY(0)'}, {transform: 'translateY(110vh) rotate(720deg)'}], 3500);
+        }
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 3500);
+    }
+
+    function show(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+</script>
+</body>
+</html>
