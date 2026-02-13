@@ -172,7 +172,7 @@
                 p.style.top = (15 + row*25) + (Math.random()*5) + 'vh';
                 const baseRot = Math.random()*40-20;
                 p.style.transform = `rotate(${baseRot}deg) scale(0)`;
-                p.innerHTML = `<img src="${i}.jpg" onerror="this.src='https://picsum.photos/400/500?random=${i}'">`;
+                p.innerHTML = `<img src="./${i}.jpg" onerror="this.src='https://picsum.photos/400/500?random=${i}'">`;
                 
                 // Tilt Effect
                 p.onmousemove = (e) => {
@@ -217,3 +217,4 @@
 </script>
 </body>
 </html>
+
